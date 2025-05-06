@@ -51,31 +51,70 @@ def predict():
     data = request.json
     symptoms = data.get("symptoms", [])
     age = data.get("age", 30)
+    followup = data.get("followup", {})
 
+    # -----------------------------
+    # Compute follow-up weight
+    # -----------------------------
+    def compute_followup_weight(followup_data):
+        total = 0
+        for key, answers in followup_data.items():
+            if isinstance(answers, list):
+                for answer in answers:
+                    if isinstance(answer, dict) and "weight" in answer:
+                        total += answer["weight"]
+                    elif isinstance(answer, str) and "|" in answer:
+                        try:
+                            total += int(answer.split("|")[-1])
+                        except:
+                            continue
+            elif isinstance(answers, (int, float, str)):
+                try:
+                    total += int(answers)
+                except:
+                    continue
+        return total
+
+    followup_weight = compute_followup_weight(followup)
+
+    # -----------------------------
+    # Model Prediction
+    # -----------------------------
     input_df = prepare_input(symptoms, age)
 
-    # Predict with base models
     xgb_proba = xgb_model.predict_proba(input_df)
     lgb_proba = lgb_model.predict_proba(input_df)
 
-    # Predict with meta model
     meta_input = np.hstack([xgb_proba, lgb_proba])
-    meta_proba_all = meta_model.predict_proba(meta_input)[0]  # [P(class_0), P(class_1)]
+    meta_proba_all = meta_model.predict_proba(meta_input)[0]
+
     final_pred = int(np.argmax(meta_proba_all))
     confidence = round(float(meta_proba_all[final_pred]), 3)
     label_meaning = map_prediction_to_label(final_pred)
+
+    # -----------------------------
+    # Override logic
+    # -----------------------------
+    override_reason = None
+    if final_pred == 1 and followup_weight >= 60:
+        final_pred = 0
+        confidence = round(float(meta_proba_all[0]), 3)
+        label_meaning = map_prediction_to_label(final_pred)
+        override_reason = f"Upgraded due to follow-up weight: {followup_weight}"
 
     result = {
         "prediction": final_pred,
         "meaning": label_meaning,
         "confidence": confidence,
         "class_0_confidence": round(float(meta_proba_all[0]), 3),
-        "class_1_confidence": round(float(meta_proba_all[1]), 3)
+        "class_1_confidence": round(float(meta_proba_all[1]), 3),
+        "followup_weight": followup_weight,
+        "override_reason": override_reason
     }
-
 
     print("✅ Sending prediction:", result)
     return jsonify(result)
+
 
 @app.route('/debug/features', methods=['GET'])
 def debug_features():

@@ -1,10 +1,40 @@
 console.log("Script loaded!");
 
+window.onload = () => {
+  document.getElementById("resultModal").style.display = "none";
+  document.getElementById("followupModal").style.display = "none";
+};
+document.getElementById("closeModal").onclick = () => {
+  document.getElementById("resultModal").style.display = "none";
+};
+window.onclick = function(event) {
+  if (event.target.id === "resultModal") {
+    document.getElementById("resultModal").style.display = "none";
+  }
+};
+
+
+let currentSymptomKey = null;
+let currentFollowup = null;
+let followupQuestions = {};
+let followupAnswers = {};  
+
 let ccMapping = {};
 fetch("/static/cc_mapping.json")
   .then(res => res.json())
   .then(data => { ccMapping = data; })
   .catch(() => alert("⚠️ Failed to load cc_mapping.json"));
+
+
+
+  fetch("/static/followup_questions.json")
+    .then(res => res.json())
+    .then(data => {
+      followupQuestions = data;
+      console.log("✅ Follow-up questions loaded:", followupQuestions);
+    })
+    .catch(() => alert("⚠️ Failed to load followup_questions.json"));
+  
 
   const categories = 
   [
@@ -374,8 +404,10 @@ function renderCategories() {
 document.getElementById("clearSubcategories").onclick = () => {
   document.getElementById("symptomGrid").innerHTML = "";
 };
+
 document.getElementById("clearSelected").onclick = () => {
-  document.getElementById("submit-selected-container").innerHTML = "";
+  selected = [];  // reset internal state
+  document.getElementById("selectedSymptoms").innerHTML = ""; // clear UI
 };
 
 
@@ -398,13 +430,150 @@ function renderSymptoms(symptoms, id) {
 
 
 function toggleSymptom(symptom) {
-  if (selected.includes(symptom)) {
+  const isAlreadySelected = selected.includes(symptom);
+
+  if (isAlreadySelected) {
     selected = selected.filter(s => s !== symptom);
   } else {
     selected.push(symptom);
+
+    // Then optionally trigger follow-up
+    const key = Object.keys(ccMapping).find(k => symptom.includes(ccMapping[k].zh));
+    if (key && followupQuestions[key]) {
+      currentSymptomKey = key;
+      currentFollowup = followupQuestions[key];
+
+      // Delay follow-up modal slightly to ensure selected[] is updated
+      setTimeout(() => {
+        showFollowupPrompt(key, followupQuestions[key]);
+      }, 100);
+    }
   }
+
   updateSelected();
 }
+
+
+
+function showFollowupPrompt(symptomKey, config) {
+  const modal = document.getElementById("followupModal");
+  const question = document.getElementById("followupQuestionText");
+  const optionsDiv = document.getElementById("followupOptions");
+  const closeBtn = document.getElementById("closeFollowupModal");
+
+  question.textContent = config.question;
+  optionsDiv.innerHTML = "";
+
+  if (config.type === "checkboxes") {
+    config.options.forEach((opt, idx) => {
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.id = `option-${idx}`;
+      checkbox.value = opt.text;
+
+      const label = document.createElement("label");
+      label.htmlFor = `option-${idx}`;
+      label.textContent = opt.text;
+
+      const container = document.createElement("div");
+      container.classList.add("followup-checkbox-item");
+
+      label.prepend(checkbox);
+      container.appendChild(label);
+      optionsDiv.appendChild(container);
+    });
+  } else if (config.type === "number") {
+    const input = document.createElement("input");
+    input.type = "number";
+    input.id = "followupNumberInput";
+    input.placeholder = "請輸入數字 (Enter a number)";
+    optionsDiv.appendChild(input);
+  }
+
+  modal.style.display = "block";
+
+  closeBtn.onclick = () => {
+    modal.style.display = "none";
+    optionsDiv.innerHTML = "";
+    question.textContent = "";
+  };
+  
+
+  document.getElementById("submitFollowup").onclick = () => {
+    const result = [];
+    let noneSelected = false;
+  
+    if (currentFollowup.type === "checkboxes") {
+      const checkboxes = document.querySelectorAll("#followupOptions input[type=checkbox]");
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          result.push(cb.value);
+          if (cb.value.includes("無以上情況") || cb.value.toLowerCase().includes("none of the above")) {
+            noneSelected = true;
+          }
+        }
+      });
+    } else if (currentFollowup.type === "number") {
+      const value = document.getElementById("followupNumberInput").value;
+      result.push(value);
+    }
+  
+    followupAnswers[currentSymptomKey] = result;
+    console.log("✅ Follow-up saved:", currentSymptomKey, result);
+  
+    const modal = document.getElementById("resultModal");
+    const followupModal = document.getElementById("followupModal");
+    const resultText = document.getElementById("resultText");
+  
+    followupModal.style.display = "none";
+  
+    // "None of the above" logic
+    if (noneSelected) {
+      modal.classList.remove("modal-urgent", "modal-warning", "modal-safe");
+      modal.classList.add("modal-warning");
+  
+      resultText.innerHTML = `
+        🟨 根據您提供的資訊，暫無嚴重警示症狀。<br>
+        建議觀察或門診諮詢，無需急診。<br><br>
+        🟨 Based on your answers, there are no alarming symptoms.<br>
+        You may monitor the condition or visit a clinic — ER  not required.
+      `;
+      modal.style.display = "block";
+      return;
+    }
+    // Otherwise, proceed to prediction
+    submitSymptoms();
+  };
+  
+  
+}
+
+function calculateFollowupWeight(followupAnswers, followupConfig) {
+  let totalWeight = 0;
+
+  for (const key in followupAnswers) {
+    const answers = followupAnswers[key];
+    const config = followupConfig[key];
+
+    if (config && config.type === "checkboxes") {
+      config.options.forEach(opt => {
+        if (answers.includes(opt.text)) {
+          totalWeight += opt.weight || 0;
+        }
+      });
+    } else if (config && config.type === "number") {
+      const thresholds = config.weight_logic?.thresholds || [];
+      const value = parseInt(answers[0]);
+      thresholds.forEach(thr => {
+        if (value >= thr.min) totalWeight = Math.max(totalWeight, thr.weight);
+      });
+    }
+  }
+
+  return totalWeight;
+}
+
+
 
 function updateSelected() {
   selectedSymptoms.innerHTML = "";
@@ -443,6 +612,12 @@ searchInput.addEventListener("input", () => {
   });
 });
 
+document.getElementById("clearSearchBtn").onclick = () => {
+  document.getElementById("searchInput").value = "";
+  renderCategories(); // or refresh category list if you have one
+  document.getElementById("symptomGrid").innerHTML = "";
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   renderCategories();
 
@@ -465,33 +640,58 @@ function syncAgeInputs(value) {
 async function submitSymptoms() {
   const extraInput = document.getElementById("userSymptomInput")?.value.trim();
   const ageInput = parseInt(document.getElementById("ageNumberInput")?.value.trim());
+  const modal = document.getElementById("resultModal");
 
   const finalSymptoms = [...selected];
   if (extraInput) finalSymptoms.push(extraInput);
 
   const englishSymptoms = finalSymptoms.map(symptomZh => {
     for (const [ccKey, value] of Object.entries(ccMapping)) {
-      if (symptomZh.includes(value.zh)) return ccKey;
+      if (symptomZh === value.zh) return ccKey;
     }
     return null;
   }).filter(Boolean);
 
-  console.log("Submitting:", englishSymptoms, "Age:", ageInput);
+  console.log("Submitting:", englishSymptoms, "Age:", ageInput, "Followup:", followupAnswers);
 
   try {
     const response = await fetch("/api/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ symptoms: englishSymptoms, age: ageInput })
+      body: JSON.stringify({
+        symptoms: englishSymptoms,
+        age: ageInput,
+        followup: followupAnswers
+      })
     });
 
-    const data = await response.json();  // 👈 if this fails, catch() runs
+    const data = await response.json();
     console.log("✅ Received:", data);
 
     if (data && "prediction" in data) {
-      showModal(`預測結果：${data.meaning} 信心值: ${data.confidence}`);
+      // Clear existing color class
+      modal.classList.remove("modal-urgent", "modal-warning", "modal-safe");
+
+      // Add color class based on prediction and followup
+      if (data.prediction === 0) {
+        modal.classList.add("modal-urgent");
+      } else if (data.followup_weight >= 60) {
+        modal.classList.add("modal-warning");
+      } else {
+        modal.classList.add("modal-safe");
+      }
+
+      // Set modal content
+      let resultMessage = `預測結果：<span style="color:#c62828;">🟥 ${data.meaning}</span><br>`;
+      resultMessage += `Emergency 信心值: ${data.confidence}`;
+      if (data.override_reason) {
+        resultMessage += `<br><small style="color:#888;">${data.override_reason}</small>`;
+      }
+
+      document.getElementById("resultText").innerHTML = resultMessage;
+      modal.style.display = "block";
     } else {
-      throw new Error("Missing prediction in response");
+      throw new Error("Missing predictio in response");
     }
 
   } catch (error) {
@@ -499,6 +699,7 @@ async function submitSymptoms() {
     alert("❌ 無法提交症狀，請稍後再試。");
   }
 }
+
 
 
 function showModal(resultText) {
@@ -519,4 +720,5 @@ function showModal(resultText) {
     }
   };
 }
+
 
