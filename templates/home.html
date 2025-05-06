@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>急症室前評估</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
+</head>
+<body>
+    <div class="container">
+        <h1>急症室前評估</h1>
+        
+        <div class="alert">
+            ⚠️ 如有心口痛或嚴重呼吸困難情況，請立即致電 999：
+        </div>
+        
+        
+        <div class="section">
+            <h2>如有以下任一情況，請立即致電 999：</h2>
+            <ul class="triage-list">
+                <li><strong>❤️ 心臟病發作的跡象 (Signs of a heart attack)：</strong><br/>
+                    胸痛、心口痛、感到壓力擠壓胸部、有心臟病病史<br/>
+                    Chest pain, pressure, heaviness, tightness or squeezing across the chest
+                </li>
+              
+                <li><strong>🧠 中風的跡象 (Signs of a stroke)：</strong><br/>
+                    臉一側下垂，雙臂無法舉起，說話困難／模糊<br/>
+                    Face drooping on one side, can’t hold both arms up, difficulty speaking
+                </li>
+              
+                <li><strong>😵‍💫 突然意識混亂 (Sudden confusion, delirium)：</strong><br/>
+                    無法確定自己的姓名或年齡<br/>
+                    Cannot be sure of own name or age
+                </li>
+              
+                <li><strong>🆘 自殺未遂或有自殘傾向 (Suicide attempt)：</strong><br/>
+                    嘗試自殺或自我傷害<br/>
+                    By taking something or self-harming
+                </li>
+              
+                <li><strong>😮‍💨 嚴重呼吸困難 (Severe difficulty breathing)：</strong><br/>
+                    無法說話，窒息或喘氣<br/>
+                    Not being able to get words out, choking or gasping
+                </li>
+              
+                <li><strong>🩸 大量出血 (Heavy bleeding)：</strong><br/>
+                    噴灑或出血量足以形成水坑<br/>
+                    Spraying, pouring or enough to make a puddle
+                </li>
+              
+                <li><strong>💥 嚴重創傷 (Severe injuries)：</strong><br/>
+                    發生嚴重事故後<br/>
+                    After a serious accident
+                </li>
+              
+                <li><strong>⚡ 癲癇發作 (Seizure, fit)：</strong><br/>
+                    因痙攣發抖、失去知覺（無法醒來）<br/>
+                    Shaking or jerking because of a fit, or unconscious (can’t be woken up)
+                </li>
+              
+                <li><strong>🤧 嚴重過敏反應 (Sudden, rapid swelling)：</strong><br/>
+                    嘴唇、嘴巴、喉嚨或舌頭腫脹<br/>
+                    Of the lips, mouth, throat or tongue
+                </li>
+              
+                <li><strong>👶 臨產或分娩 (Labour or childbirth)：</strong><br/>
+                    破水、更頻繁劇烈宮縮、嬰兒即將出生或剛出生<br/>
+                    Waters breaking, more frequent intense cramps (contractions), baby coming, or just born
+                </li>
+              
+                <li><strong>🧱 頭部受傷 (Head injury)：</strong><br/>
+                    視力模糊、嘔吐、暈眩或失去知覺<br/>
+                    Blurred vision, vomiting, dizziness or unconsciousness after head trauma
+                </li>
+              
+                <li><strong>🔥 大面積燒燙傷 (Large-area burns)：</strong><br/>
+                    嚴重或範圍大的燒傷<br/>
+                    Severe or widespread burns
+                </li>
+              </ul>
+              
+        </div>
+        <a href="{{ url_for('chatbox_page') }}" class="button">沒有以上情況</a>
+
+    </div>
+
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+          <span class="close-btn" id="closeModal">&times;</span>
+          <p id="resultText">預測結果會顯示在這裡。</p>
+        </div>
+      </div>
+      
+</body>
+</html>

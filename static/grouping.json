@@ -1,0 +1,265 @@
+{
+  "critical": [
+    "cc_dyspnea",
+    "cc_shortnessofbreath",
+    "cc_allergicreaction",
+    "cc_strokealert",
+    "cc_syncope",
+    "cc_seizure-newonset",
+    "cc_cardiacarrest",
+    "cc_chestpain",
+    "cc_chesttightness",
+    "cc_decreasedbloodsugar-symptomatic",
+    "cc_elevatedbloodsugar-symptomatic",
+    "cc_fall>65",
+    "cc_feverimmunocompromised",
+    "cc_fulltrauma",
+    "cc_homicidal",
+    "cc_assaultvictim",
+    "cc_lossofconsciousness",
+    "cc_unresponsive",
+    "cc_sicklecellpain",
+    "cc_overdose-accidental",
+    "cc_overdose-intentional",
+    "cc_poisoning"
+  ],
+
+  "injury" :[
+    "cc_trauma",
+    "cc_motorvehiclecrash",
+    "cc_motorcyclecrash",
+    "cc_modifiedtrauma",
+    "cc_multiplefalls",
+    "cc_fall",
+    "cc_bleeding/bruising",
+    "cc_bodyfluidexposure",
+    "cc_extremitylaceration",
+    "cc_faciallaceration",
+    "cc_eyeinjury"
+],
+
+"respiratory" :[
+    "cc_asthma","cc_breathingdifficulty",
+    "cc_breathingproblem",
+    "cc_cough",
+    "cc_hemoptysis",
+    "cc_respiratorydistress",
+    "cc_wheezing"
+],
+
+"cardiovascular": [
+    "cc_hypertension",
+    "cc_hypotension",
+    "cc_palpitations",
+    "cc_tachycardia",
+    "cc_rapidheartrate",
+    "cc_irregularheartbeat"
+],
+
+"neurological" : [
+    "cc_alteredmentalstatus",
+    "cc_confusion",
+    "cc_dizziness",
+    "cc_headache",
+    "cc_seizures",
+    "cc_nearsyncope",
+    "cc_neurologicproblem",
+    "cc_seizure-priorhxof",
+    "cc_migraine",
+    "cc_headache-newonsetornewsymptoms",
+    "cc_headache-recurrentorknowndxmigraines",
+    "cc_headachere-evaluation"
+],
+
+"gi": [
+    "cc_abdominalcramping",
+    "cc_abdominaldistention",
+    "cc_abdominalpain",
+    "cc_constipation",
+    "cc_diarrhea",
+    "cc_emesis",
+    "cc_epigastricpain",
+    "cc_gibleeding",
+    "cc_giproblem",
+    "cc_nausea",
+    "cc_rectalbleeding",
+    "cc_rectalpain",
+    "cc_dehydration",
+    "cc_ingestion",
+    "cc_swallowedforeignbody"
+],
+
+"head_neck" : [
+    "cc_facialswelling",
+    "cc_facialpain",
+    "cc_facialinjury",
+    "cc_neckpain",
+    "cc_jawpain",
+    "cc_headinjury", 
+    "cc_headlaceration",
+    "cc_dentalpain",
+    "cc_oralswelling"
+],
+
+"ent_eye" : [
+    "cc_blurredvision",
+    "cc_conjunctivitis",
+    "cc_eyepain",
+    "cc_eyeproblem",
+    "cc_epistaxis",
+    "cc_eyeredness",
+    "cc_otalgia",
+    "cc_earproblem",
+    "cc_earpain",
+    "cc_nasalcongestion",
+    "cc_foreignbodyineye",
+    "cc_sinusproblem"
+],
+
+"musculoskeletal_pain" : [
+    "cc_hippain",
+    "cc_footpain",
+    "cc_toepain",
+    "cc_legpain",
+    "cc_kneepain",
+    "cc_anklepain",
+    "cc_shoulderpain",
+    "cc_wristpain",
+    "cc_handpain",
+    "cc_armpain",
+    "cc_backpain",
+    "cc_fingerpain",
+    "cc_elbowpain",
+    "cc_ribpain"
+],
+
+"musculoskeletal_swelling": [
+    "cc_footswelling",
+    "cc_legswelling",
+    "cc_armswelling",
+    "cc_jointswelling",        
+    "cc_fingerswelling" 
+],
+
+"musculoskeletal_injury" : [
+    "cc_footinjury",
+    "cc_kneeinjury",
+    "cc_leginjury",
+    "cc_toeinjury",
+    "cc_ribinjury",
+    "cc_thumbinjury",
+    "cc_wristinjury",
+    "cc_fingerinjury",
+    "cc_handinjury",  
+    "cc_arminjury",
+    "cc_shoulderinjury",
+    "cc_ankleinjury"
+],
+
+"musculoskeletal_condition": [
+    "cc_extremityweakness",
+    "cc_numbness"
+],
+
+"pain_":[
+    "cc_pain",
+    "cc_generalizedbodyaches"
+],
+
+"endocrine_group": [
+    "cc_elevatedbloodsugar-nosymptoms",
+    "cc_hyperglycemia","cc_diabetesrelated"
+],
+
+"gynae_group" : [
+    "cc_breastpain",
+    "cc_vaginaldischarge",
+    "cc_vaginalbleeding",
+    "cc_vaginalpain",
+    "cc_femaleguproblem",
+    "cc_abdominalpainpregnant"
+],
+
+"genitourinary": [
+    "cc_pelvicpain",
+    "cc_flankpain",
+    "cc_groinpain",
+    "cc_testiclepain",
+    "cc_maleguproblem",
+    "cc_hematuria",
+    "cc_urinaryfrequency",
+    "cc_urinaryretention",
+    "cc_dysuria"
+],
+
+"dermatological": [
+    "cc_abscess",
+    "cc_burn",
+    "cc_cellulitis",
+    "cc_rash",
+    "cc_cyst",
+    "cc_mass",
+    "cc_skinproblem",
+    "cc_skinirritation"
+],
+
+"infectious_group ": [
+    "cc_influenza",
+    "cc_fever",
+    "cc_coldlikesymptoms",
+    "cc_sorethroat",
+    "cc_insectbite",
+    "cc_animalbite",
+    "cc_urinarytractinfection",
+    "cc_uri",
+    "cc_tickremoval",
+    "cc_exposuretostd",
+    "cc_fever-75yearsorolder",
+    "cc_fever-9weeksto74years"
+],
+
+"psychiatric": [
+    "cc_addictionproblem",
+    "cc_alcoholintoxication",
+    "cc_alcoholproblem",
+    "cc_anxiety",
+    "cc_depression",
+    "cc_hallucinations",
+    "cc_psychiatricevaluation",
+    "cc_suicidal",
+    "cc_agitation",
+    "cc_detoxevaluation",
+    "cc_drug/alcoholassessment",
+    "cc_drugproblem",
+    "cc_withdrawal-alcohol",
+    "cc_panicattack",
+    "cc_psychoticsymptoms"
+],
+
+"medical_service":[
+    "cc_post-opproblem",
+    "cc_stdcheck",
+    "cc_medicalproblem",
+    "cc_medicalscreening",
+    "cc_medicationproblem",
+    "cc_medicationrefill",
+    "cc_follow-upcellulitis",
+    "cc_seniorhealthconcerns",
+    "cc_abnormallab",
+    "cc_suture/stapleremoval",
+    "cc_woundcheck",
+    "cc_woundinfection",
+    "cc_woundre-evaluation",
+    "cc_laceration"
+],
+
+"special_conditions" : [
+    "cc_weakness",
+    "cc_chills",
+    "cc_fatigue",
+    "cc_lethargy",
+    "cc_edema",
+    "cc_other"
+]
+
+}
