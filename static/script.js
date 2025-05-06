@@ -374,6 +374,9 @@ function renderCategories() {
 document.getElementById("clearSubcategories").onclick = () => {
   document.getElementById("symptomGrid").innerHTML = "";
 };
+document.getElementById("clearSelected").onclick = () => {
+  document.getElementById("submit-selected-container").innerHTML = "";
+};
 
 
 function renderSymptoms(symptoms, id) {
