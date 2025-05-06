@@ -8,9 +8,9 @@ import xgboost
 app = Flask(__name__)
 
 # Load models and column references
-xgb_model = joblib.load("xgb_base.pkl")
-lgb_model = joblib.load("lgb_base.pkl")
-meta_model = joblib.load("xgb_meta_model.pkl")
+xgb_model = joblib.load("models/xgb_base.pkl")
+lgb_model = joblib.load("models/lgb_base.pkl")
+meta_model = joblib.load("models/xgb_meta_model.pkl")
 
 with open("xgb_threshold.txt") as f:
     xgb_threshold = float(f.read())
