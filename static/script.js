@@ -358,7 +358,7 @@ function renderCategories() {
     div.className = `category-item cat-${cat.id}`;
     div.innerHTML = `${cat.icon || ""} ${cat.name}`;
 
-    div.ondblclick = () => {
+    div.onclick = () => {
       const existing = document.getElementById(`symptoms-${cat.id}`);
       if (existing) {
         existing.remove(); // toggle off
@@ -486,8 +486,9 @@ async function submitSymptoms() {
     console.log("✅ Received:", data);
 
     if (data && "prediction" in data) {
-      showModal(`預測結果：${data.prediction} (${data.meaning}) 信心值: ${data.confidence}`);
-
+      showModal(`預測結果：${data.prediction} (${data.meaning})<br/>
+    🟥 緊急 Emergency 信心值: ${data.class_0_confidence}<br/>
+    🟧 非緊急 Non-urgent 信心值: ${data.class_1_confidence}`);
     } else {
       throw new Error("Missing prediction in response");
     }
