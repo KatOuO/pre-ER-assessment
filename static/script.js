@@ -486,7 +486,11 @@ async function submitSymptoms() {
     console.log("✅ Received:", data);
 
     if (data && "prediction" in data) {
-      showModal(`預測結果 Prediction Result：${data.prediction} (${data.meaning}) 信心值 Confidence : ${data.confidence}`);
+      showModal(
+        `預測結果：${data.prediction} (${data.meaning})<br/>
+         🟥 緊急 Urgent 信心值: ${data.confidence_urgent}<br/>
+         🟧 非緊急 Non-urgent 信心值: ${data.confidence_nonurgent}`
+      );
     } else {
       throw new Error("Missing prediction in response");
     }

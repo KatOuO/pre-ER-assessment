@@ -62,13 +62,15 @@ def predict():
     meta_input = np.hstack([xgb_proba, lgb_proba])
     meta_proba_all = meta_model.predict_proba(meta_input)[0]  # [P(class_0), P(class_1)]
     final_pred = int(meta_proba_all[1] >= meta_threshold)
-    confidence = float(meta_proba_all[final_pred])
+
 
     label_meaning = map_prediction_to_label(final_pred)
+
     result = {
         "prediction": final_pred,
         "meaning": label_meaning,
-        "confidence": round(float(meta_proba_all[0]), 3)
+        "confidence_urgent": round(float(meta_proba_all[0]), 3),
+        "confidence_nonurgent": round(float(meta_proba_all[1]), 3)
     }
     print("✅ Sending prediction:", result)
     return jsonify(result)
