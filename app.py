@@ -12,14 +12,14 @@ xgb_model = joblib.load("models/xgb_base.pkl")
 lgb_model = joblib.load("models/lgb_base.pkl")
 meta_model = joblib.load("models/xgb_meta_model.pkl")
 
-with open("xgb_threshold.txt") as f:
+with open("models/xgb_threshold.txt") as f:
     xgb_threshold = float(f.read())
-with open("lgb_threshold.txt") as f:
+with open("models/lgb_threshold.txt") as f:
     lgb_threshold = float(f.read())
-with open("meta_threshold.txt") as f:
+with open("models/meta_threshold.txt") as f:
     meta_threshold = float(f.read())
 
-with open('column_reference.json', 'r') as f:
+with open('static/column_reference.json', 'r') as f:
     all_features = json.load(f)
 
 def encode_symptoms(symptoms, all_features):
