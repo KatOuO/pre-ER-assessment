@@ -1,17 +1,22 @@
 console.log("Script loaded!");
 
 window.onload = () => {
-  document.getElementById("resultModal").style.display = "none";
+  document.getElementById("resultModalOverlay").style.display = "none";
   document.getElementById("followupModal").style.display = "none";
 };
+
 document.getElementById("closeModal").onclick = () => {
-  document.getElementById("resultModal").style.display = "none";
+  document.getElementById("resultModalOverlay").style.display = "none";
 };
+
 window.onclick = function(event) {
-  if (event.target.id === "resultModal") {
-    document.getElementById("resultModal").style.display = "none";
+  const overlay = document.getElementById("resultModalOverlay");
+  const box = document.getElementById("resultModalBox");
+  if (event.target === overlay) {
+    overlay.style.display = "none";
   }
 };
+
 
 
 let currentSymptomKey = null;
@@ -285,7 +290,7 @@ fetch("/static/cc_mapping.json")
           ]
         },
         {
-          name: "🟢 皮膚問題 Dermatological Issues",
+          name: "🟢 皮膚相關 Dermatological Issues",
           id: "dermatology",
           symptoms: [
             "膿腫 Abscess",
@@ -299,7 +304,7 @@ fetch("/static/cc_mapping.json")
           ]
         },
         {
-          name: "🦠 感染性疾病與動物/昆蟲咬傷",
+          name: "🦠 傳染性疾病與動物/咬傷 Infectious Disease/ Bites",
           id: "infection",
           symptoms: [
             "流感 Influenza",
@@ -357,7 +362,7 @@ fetch("/static/cc_mapping.json")
           ]
         },
         {
-          name: "❓ 特殊情況與其他",
+          name: "❓ 特殊情況與其他 Special Condiion",
           id: "special",
           symptoms: [
             "虛弱 Weakness",
@@ -371,7 +376,6 @@ fetch("/static/cc_mapping.json")
       ]; 
 
 const categoryGrid = document.getElementById("categoryGrid");
-const symptomGrid = document.getElementById("symptomGrid");
 const selectedSymptoms = document.getElementById("selectedSymptoms");
 const searchInput = document.getElementById("searchInput");
 
@@ -380,7 +384,6 @@ let lastCategoryClicked = null;
 
 function renderCategories() {
   categoryGrid.innerHTML = "";
-  symptomGrid.innerHTML = "";
 
   categories.forEach(cat => {
     const div = document.createElement("div");
@@ -401,31 +404,52 @@ function renderCategories() {
   });
 }
 
-document.getElementById("clearSubcategories").onclick = () => {
-  document.getElementById("symptomGrid").innerHTML = "";
-};
-
 document.getElementById("clearSelected").onclick = () => {
   selected = [];  // reset internal state
   document.getElementById("selectedSymptoms").innerHTML = ""; // clear UI
 };
+document.getElementById("closeFollowupModal").onclick = () => {
+  document.getElementById("followupModal").style.display = "none";
+};
+window.addEventListener("click", function (e) {
+  const overlay = document.getElementById("followupModal");
+  const box = document.getElementById("followupBox");
+  if (e.target === overlay) {
+    overlay.style.display = "none";
+  }
+});
 
 
 function renderSymptoms(symptoms, id) {
-  const container = document.createElement("div");
-  container.className = "sub-category-container";
-  container.id = `symptoms-${id}`; // assign unique ID
+  const overlay = document.getElementById("symptomPopupOverlay");
+  const list = document.getElementById("popupSymptomList");
+  list.innerHTML = "";
 
   symptoms.forEach(symptom => {
     const div = document.createElement("div");
     div.className = "symptom-item";
     div.textContent = symptom;
-    div.onclick = () => toggleSymptom(symptom);
-    container.appendChild(div);
+    div.onclick = () => {
+      toggleSymptom(symptom);
+      overlay.style.display = "none";
+    };
+    list.appendChild(div);
   });
 
-  document.getElementById("symptomGrid").appendChild(container);
+  overlay.style.display = "flex";
 }
+
+document.getElementById("closeSymptomPopup").onclick = () => {
+  document.getElementById("symptomPopupOverlay").style.display = "none";
+};
+
+window.addEventListener("click", function (e) {
+  const popup = document.getElementById("symptomPopup");
+  const overlay = document.getElementById("symptomPopupOverlay");
+  if (e.target === overlay) {
+    overlay.style.display = "none";
+  }
+});
 
 
 
@@ -498,7 +522,7 @@ function showFollowupPrompt(symptomKey, config) {
     question.textContent = "";
   };
   
-
+}
   document.getElementById("submitFollowup").onclick = () => {
     const result = [];
     let noneSelected = false;
@@ -521,32 +545,34 @@ function showFollowupPrompt(symptomKey, config) {
     followupAnswers[currentSymptomKey] = result;
     console.log("✅ Follow-up saved:", currentSymptomKey, result);
   
-    const modal = document.getElementById("resultModal");
-    const followupModal = document.getElementById("followupModal");
-    const resultText = document.getElementById("resultText");
+    // ✅ Always close the follow-up overlay first
+    document.getElementById("followupModal").style.display = "none";
   
-    followupModal.style.display = "none";
+    // ✅ Delay to ensure modal doesn't overlap (wait 200ms)
+    setTimeout(() => {
+      if (noneSelected) {
+        // Show non-urgent result
+        const overlay = document.getElementById("resultModalOverlay");
+        const box = document.getElementById("resultModalBox");
   
-    // "None of the above" logic
-    if (noneSelected) {
-      modal.classList.remove("modal-urgent", "modal-warning", "modal-safe");
-      modal.classList.add("modal-warning");
+        box.classList.remove("modal-urgent", "modal-warning", "modal-safe");
+        box.classList.add("modal-warning");
   
-      resultText.innerHTML = `
-        🟨 根據您提供的資訊，暫無嚴重警示症狀。<br>
-        建議觀察或門診諮詢，無需急診。<br><br>
-        🟨 Based on your answers, there are no alarming symptoms.<br>
-        You may monitor the condition or visit a clinic — ER  not required.
-      `;
-      modal.style.display = "block";
-      return;
-    }
-    // Otherwise, proceed to prediction
-    submitSymptoms();
+        document.getElementById("resultText").innerHTML = `
+          🟨 根據您提供的資訊，暫無嚴重警示症狀。<br>
+          建議觀察或門診諮詢，無需急診。<br><br>
+          🟨 Based on your answers, there are no alarming symptoms.<br>
+          You may monitor the condition or visit a clinic — ER is not required.
+        `;
+        overlay.style.display = "flex";
+      } else {
+        // Proceed to model prediction
+        submitSymptoms();
+      }
+    }, 200);
   };
   
   
-}
 
 function calculateFollowupWeight(followupAnswers, followupConfig) {
   let totalWeight = 0;
@@ -590,7 +616,6 @@ function updateSelected() {
 searchInput.addEventListener("input", () => {
   const keyword = searchInput.value.toLowerCase().trim();
   if (!keyword) {
-    symptomGrid.innerHTML = "";
     lastCategoryClicked = null;
     return;
   }
@@ -600,7 +625,7 @@ searchInput.addEventListener("input", () => {
   );
 
   const matched = allSymptoms.filter(s => s.text.toLowerCase().includes(keyword));
-  symptomGrid.innerHTML = "";
+
   lastCategoryClicked = null;
 
   matched.forEach(({ text }) => {
@@ -608,15 +633,22 @@ searchInput.addEventListener("input", () => {
     div.className = "symptom-item";
     div.textContent = text;
     div.onclick = () => toggleSymptom(text);
-    symptomGrid.appendChild(div);
   });
 });
 
 document.getElementById("clearSearchBtn").onclick = () => {
   document.getElementById("searchInput").value = "";
-  renderCategories(); // or refresh category list if you have one
-  document.getElementById("symptomGrid").innerHTML = "";
+  renderCategories(); 
 };
+
+window.addEventListener("click", function (e) {
+  const modal = document.getElementById("resultModal");
+  const content = document.querySelector("#resultModal .modal-content");
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+});
+
 
 document.addEventListener("DOMContentLoaded", () => {
   renderCategories();
@@ -669,27 +701,33 @@ async function submitSymptoms() {
     console.log("✅ Received:", data);
 
     if (data && "prediction" in data) {
-      // Clear existing color class
-      modal.classList.remove("modal-urgent", "modal-warning", "modal-safe");
-
-      // Add color class based on prediction and followup
+      const box = document.getElementById("resultModalBox");
+      const overlay = document.getElementById("resultModalOverlay");
+      
+      // Clean old state
+      box.classList.remove("modal-urgent", "modal-warning", "modal-safe");
+      
+      // Add color class based on result
       if (data.prediction === 0) {
-        modal.classList.add("modal-urgent");
+        box.classList.add("modal-urgent");
       } else if (data.followup_weight >= 60) {
-        modal.classList.add("modal-warning");
+        box.classList.add("modal-warning");
       } else {
-        modal.classList.add("modal-safe");
+        box.classList.add("modal-safe");
       }
-
-      // Set modal content
-      let resultMessage = `預測結果：<span style="color:#c62828;">🟥 ${data.meaning}</span><br>`;
-      resultMessage += `Emergency 信心值: ${data.confidence}`;
+      
+      // Set result content
+      let message = `預測結果：<span style="color:#c62828;">🟥 ${data.meaning}</span><br>`;
+      message += `Emergency 信心值: ${data.confidence}`;
       if (data.override_reason) {
-        resultMessage += `<br><small style="color:#888;">${data.override_reason}</small>`;
+        message += `<br><small style="color:#888;">${data.override_reason}</small>`;
       }
-
-      document.getElementById("resultText").innerHTML = resultMessage;
-      modal.style.display = "block";
+      
+      document.getElementById("resultText").innerHTML = message;
+      
+      // Show modal overlay
+      overlay.style.display = "flex";
+      
     } else {
       throw new Error("Missing predictio in response");
     }

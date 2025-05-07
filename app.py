@@ -2,10 +2,19 @@ from flask import Flask, request, jsonify, render_template
 import joblib
 import pandas as pd
 import json
+import os
 import numpy as np
 import lightgbm
 import xgboost
+import hashlib
+import pickle
+import sqlite3
+from datetime import datetime
+
 app = Flask(__name__)
+
+CACHE_DIR = "cache/"
+os.makedirs(CACHE_DIR, exist_ok=True)
 
 # Load models and column references
 xgb_model = joblib.load("models/xgb_base.pkl")
@@ -37,6 +46,43 @@ def prepare_input(symptoms, age):
             input_data[s] = 1
 
     return pd.DataFrame([input_data])
+
+def prepare_input_with_cache(symptoms, age):
+    cache_key = hashlib.md5(f"{sorted(symptoms)}|{age}".encode()).hexdigest()
+    cache_path = os.path.join(CACHE_DIR, f"{cache_key}.pkl")
+
+    if os.path.exists(cache_path):
+        print("✅ Loaded input from cache:", cache_key)
+        with open(cache_path, "rb") as f:
+            return pickle.load(f)
+
+    # Fallback: generate fresh input
+    input_df = prepare_input(symptoms, age)
+    with open(cache_path, "wb") as f:
+        pickle.dump(input_df, f)
+    return input_df
+
+def log_submission_db(symptoms, age, followup, result):
+    conn = sqlite3.connect("data/triage_submissions.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO submissions (timestamp, age, symptoms, followup, prediction, meaning, confidence, override_reason)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        datetime.now().isoformat(),
+        age,
+        ", ".join(symptoms),
+        json.dumps(followup, ensure_ascii=False),
+        result.get("prediction"),
+        result.get("meaning"),
+        result.get("confidence"),
+        result.get("override_reason", "")
+    ))
+
+    conn.commit()
+    conn.close()
+
 
 @app.route("/")
 def home():
@@ -80,7 +126,7 @@ def predict():
     # -----------------------------
     # Model Prediction
     # -----------------------------
-    input_df = prepare_input(symptoms, age)
+    input_df = prepare_input_with_cache(symptoms, age)
 
     xgb_proba = xgb_model.predict_proba(input_df)
     lgb_proba = lgb_model.predict_proba(input_df)
@@ -113,6 +159,7 @@ def predict():
     }
 
     print("✅ Sending prediction:", result)
+    log_submission_db(symptoms, age, followup, result)
     return jsonify(result)
 
 
@@ -132,6 +179,14 @@ def debug_features():
         })
     except Exception as e:
         return jsonify({"error": str(e)})
+    
+@app.route("/admin")
+def view_submissions():
+    conn = sqlite3.connect("data/triage_submissions.db")
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute("SELECT * FROM submissions ORDER BY id DESC").fetchall()
+    conn.close()
+    return render_template("admin.html", rows=rows)
 
 def map_prediction_to_label(pred):
     if pred == 0:
@@ -139,8 +194,6 @@ def map_prediction_to_label(pred):
     else:
         return "🟧 非緊急 Non-urgent"
 
-
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
