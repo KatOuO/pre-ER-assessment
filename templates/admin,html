@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submissions Dashboard</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
+    th { background-color: #f5f5f5; }
+    body { font-family: sans-serif; padding: 20px; }
+  </style>
+</head>
+<body>
+  <h2>🧾 Triage Submissions</h2>
+  <table>
+    <tr>
+      <th>ID</th><th>Time</th><th>Age</th><th>Symptoms</th><th>Prediction</th><th>Confidence</th><th>Notes</th>
+    </tr>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.id }}</td>
+      <td>{{ row.timestamp }}</td>
+      <td>{{ row.age }}</td>
+      <td>{{ row.symptoms }}</td>
+      <td>{{ row.meaning }}</td>
+      <td>{{ row.confidence }}</td>
+      <td>{{ row.override_reason }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
