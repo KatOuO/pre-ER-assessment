@@ -1,0 +1,360 @@
+
+    {
+        "cc_multiplefalls": {
+          "question": "請問最近發生過幾次跌倒？\nHow many times have you fallen recently?",
+          "type": "number",
+          "key": "multiple_falls_count",
+          "weight_logic": {
+            "thresholds": [
+              { "min": 2, "weight": 20 },
+              { "min": 4, "weight": 40 }
+            ]
+          }
+        },
+        "cc_fall": {
+          "question": "這次跌倒有無撞到頭或意識喪失？\nDid you hit your head or lose consciousness during the fall?",
+          "type": "checkboxes",
+          "options": [
+            { "text": "頭部撞擊 / Head injury", "weight": 30 },
+            { "text": "短暫失去意識 / Brief loss of consciousness", "weight": 40 },
+            { "text": "持續頭暈 / Ongoing dizziness", "weight": 20 },
+            { "text": "65歲以上 / Age ≥ 65", "weight": 30 },
+            { "text": "無以上情況 / None of the above", "weight": 0, "exclusive": true }
+          ],
+          "key": "fall_risk_factors"
+        },
+        "cc_bleeding/bruising": {
+          "question": "出血量是否嚴重？是否持續不止？\nIs the bleeding heavy or persistent?",
+          "type": "checkboxes",
+          "options": [
+            { "text": "出血不止 / Bleeding that won't stop", "weight": 30 },
+            { "text": "大量出血 / Large amount of bleeding", "weight": 40 },
+            { "text": "有服用抗凝血藥 / On blood thinners", "weight": 25 },
+            { "text": "有無外傷伴隨腫脹 / Bruising or swelling with injury", "weight": 10 },
+            { "text": "無以上情況 / None of the above", "weight": 0, "exclusive": true }
+          ],
+          "key": "bleeding_severity"
+        },
+
+        "cc_asthma": {
+          "question": "這次哮喘發作是否影響日常活動？有使用過吸入劑嗎？\nHas your asthma attack affected daily activities? Have you used an inhaler?",
+          "type": "checkboxes",
+          "options": [
+            { "text": "持續氣喘，無法說完整句子 / Persistent wheezing, unable to speak full sentences", "weight": 40 },
+            { "text": "已使用吸入劑但效果有限 / Used inhaler with limited relief", "weight": 30 },
+            { "text": "夜間氣喘加劇 / Asthma worsens at night", "weight": 20 },
+            { "text": "無以上情況 / None of the above", "weight": 0, "exclusive": true }
+          ],
+          "key": "asthma_severity"
+        },
+        "cc_breathingproblem": {
+          "question": "請問以下哪一項描述最符合目前的呼吸情況？\nWhich of the following best describes your breathing?",
+          "type": "checkboxes",
+          "options": [
+            { "text": "說話困難／喘到無法講完整句子 / Difficulty speaking or too breathless to talk", "weight": 40 },
+            { "text": "只能坐著休息，無法平躺 / Can only breathe while sitting upright", "weight": 30 },
+            { "text": "胸悶或呼吸不順 / Chest tightness or discomfort with breathing", "weight": 20 },
+            { "text": "呼吸時有聲音 / Noisy breathing or wheeze", "weight": 10 },
+            { "text": "無以上情況 / None of the above", "weight": 0, "exclusive": true }
+          ],
+          "key": "breathing_description"
+        },
+        "cc_cough": {
+          "question": "請問咳嗽持續多久？有無其他症狀？\nHow long have you been coughing? Any other symptoms?",
+          "type": "checkboxes",
+          "options": [
+            { "text": "咳嗽持續超過一週 / Cough > 1 week", "weight": 15 },
+            { "text": "伴有發燒 / With fever", "weight": 20 },
+            { "text": "夜間加劇或影響睡眠 / Worse at night or disturbs sleep", "weight": 15 },
+            { "text": "有痰液但無發燒 / Has phlegm but no fever", "weight": 10 },
+            { "text": "無以上情況 / None of the above", "weight": 0, "exclusive": true }
+          ],
+          "key": "cough_assessment"
+        },
+        "cc_haemoptysis": {
+          "question": "請問咳血的量與頻率？\nHow much and how often are you coughing up blood?",
+          "type": "checkboxes",
+          "options": [
+            { "text": "持續咳血或量多（>一茶匙） / Ongoing or large amount (>1 teaspoon)", "weight": 40 },
+            { "text": "少量咳血但已連續兩天 / Small but persistent for 2+ days", "weight": 30 },
+            { "text": "首次出現少量咳血 / First-time minor haemoptysis", "weight": 15 },
+            { "text": "無以上情況 / None of the above", "weight": 0, "exclusive": true }
+          ],
+          "key": "haemoptysis_severity"
+        },
+        "cc_wheezing": {
+          "question": "是否為首次出現喘鳴聲音？有無呼吸困難？\nIs this the first time you've had wheezing? Any shortness of breath?",
+          "type": "checkboxes",
+          "options": [
+            { "text": "首次出現喘鳴且伴呼吸困難 / First-time wheeze + breathless", "weight": 40 },
+            { "text": "反覆喘鳴但無呼吸困難 / Recurrent wheeze, no breathlessness", "weight": 20 },
+            { "text": "喘鳴時有胸悶感 / Wheezing with chest tightness", "weight": 20 },
+            { "text": "無以上情況 / None of the above", "weight": 0, "exclusive": true }
+          ],
+          "key": "wheezing_context"
+        },
+
+        "cc_palpitations": {
+        "question": "你有胸痛、暈眩或呼吸困難嗎？\nDo you also have chest pain, dizziness, or shortness of breath?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "胸痛 Chest pain", "weight": 30 },
+            { "text": "暈眩 Dizziness", "weight": 20 },
+            { "text": "呼吸困難 Shortness of breath", "weight": 20 },
+            { "text": "無以上情況 / None of the above", "weight": 0, "exclusive": true }
+        ],
+        "key": "palpitations_context"
+        },
+
+        "cc_tachycardia": {
+        "question": "心跳大約多少次每分鐘？\nApproximately how fast is your heart rate (in BPM)?",
+        "type": "number",
+        "weight_logic": {
+            "thresholds": [
+            { "min": 120, "weight": 30 },
+            { "min": 100, "weight": 20 }
+            ]
+        },
+        "key": "tachycardia_bpm"
+        },
+
+        "cc_rapidheartrate": {
+        "question": "你在休息時心跳仍然很快嗎？\nIs your heart rate fast even while resting?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "是 Yes", "weight": 20 },
+            { "text": "否 No", "weight": 0 }
+        ],
+        "key": "resting_tachy"
+        },
+
+        "cc_irregularheartbeat": {
+        "question": "是否曾經診斷為心房顫動？\nHave you been diagnosed with atrial fibrillation?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "是 Yes, diagnosed with Afib", "weight": 25 },
+            { "text": "否 No", "weight": 0 }
+        ],
+        "key": "afib_history"
+        },
+
+        "cc_alteredmentalstatus": {
+        "question": "是否能說出自己的名字與今天日期？\nCan they state their name and today's date?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "可以 Yes", "weight": 0 },
+            { "text": "不能 No", "weight": 40 }
+        ],
+        "key": "orientation_check"
+        },
+
+        "cc_confusion": {
+        "question": "這情況發生多久了？是否會時好時壞？\nHow long has the confusion lasted? Is it fluctuating?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "突然開始 Sudden onset", "weight": 30 },
+            { "text": "逐漸出現 Gradual", "weight": 10 },
+            { "text": "時好時壞 Fluctuating", "weight": 20 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "confusion_context"
+        },
+        "cc_dizziness": {
+        "question": "是感覺天旋地轉還是不穩定？\nIs it spinning (vertigo) or off-balance?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "天旋地轉 Spinning / vertigo", "weight": 10 },
+            { "text": "不穩定 Off-balance", "weight": 5 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "dizziness_type"
+        },
+        "cc_headache": {
+        "question": "是你一貫的頭痛嗎？還是不同類型？\nIs this your usual headache, or a different kind?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "一貫頭痛 Usual headache", "weight": 5 },
+            { "text": "不同類型 Different kind", "weight": 20 },
+            { "text": "突發/劇烈 Sudden or worst-ever", "weight": 30 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "headache_change"
+        },
+
+        "cc_seizures": {
+        "question": "是第一次發作還是有病史？\nIs this your first seizure or do you have a history?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "第一次 First-time seizure", "weight": 40 },
+            { "text": "有病史 Known epilepsy", "weight": 10 }
+        ],
+        "key": "seizure_history"
+        },
+
+        "cc_nearsyncope": {
+        "question": "有沒有真正暈倒？\nDid you actually lose consciousness?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "有 Yes", "weight": 25 },
+            { "text": "沒有 No", "weight": 0 }
+        ],
+        "key": "syncope_loss"
+        },
+
+        "cc_neurologicproblem": {
+        "question": "是否出現肢體無力或說話困難？\nAre there symptoms like limb weakness or slurred speech?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "肢體無力 Limb weakness", "weight": 30 },
+            { "text": "說話困難 Slurred speech", "weight": 30 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "neuro_signs"
+        },
+
+        "cc_headache-newonsetornewsymptoms": {
+        "question": "是突發或劇烈的頭痛嗎？\nIs it sudden or the worst headache you've ever had?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "突發 Sudden", "weight": 25 },
+            { "text": "劇烈 Severe", "weight": 20 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "new_headache_flags"
+        },
+
+        "cc_abdominalpain": {
+        "question": "腹痛持續多久？是否局部或擴散？\nHow long has the abdominal pain lasted? Is it localized or spreading?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "持續超過6小時 Pain > 6 hrs", "weight": 30 },
+            { "text": "疼痛有擴散 Pain radiates", "weight": 20 },
+            { "text": "伴隨嘔吐 With vomiting", "weight": 10 },
+            { "text": "局部痛 localized pain", "weight": 10 },
+            { "text": "擴散痛 spreading pain", "weight": 10 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "abdpain_duration"
+        },
+
+        "cc_vomiting": {
+        "question": "嘔吐次數與內容？有無脫水跡象？\nHow many times have you vomited, and is there dehydration?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "持續多次嘔吐 Multiple episodes", "weight": 30 },
+            { "text": "嘔吐帶血 Bloody vomit", "weight": 40 },
+            { "text": "口乾少尿 Dry mouth / low urine", "weight": 20 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "vomit_context"
+        },
+
+        "cc_gibleeding": {
+        "question": "腸胃出血的表現方式為何？\nWhat form is the GI bleeding?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "黑便 Tarry stool", "weight": 30 },
+            { "text": "吐血 Vomiting blood", "weight": 40 },
+            { "text": "出血持續未止 Ongoing bleeding", "weight": 30 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "gibleed_form"
+        },
+
+        "cc_dehydration": {
+        "question": "是否有明顯脫水跡象？\nAre there clear signs of dehydration?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "皮膚乾燥 Dry skin", "weight": 10 },
+            { "text": "極少排尿 Very low urine output", "weight": 20 },
+            { "text": "昏昏欲睡 Lethargy", "weight": 20 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "dehydration_signs"
+        },
+
+        "cc_swallowedforeignbody": {
+        "question": "吞入異物後是否感到不適？\nDo you feel discomfort after swallowing the object?",
+        "type": "checkboxes",
+        "options": [
+            { "text": "胸口或喉嚨不適 Chest/throat discomfort", "weight": 20 },
+            { "text": "呼吸困難 Shortness of breath", "weight": 30 },
+            { "text": "吞嚥困難 Difficulty swallowing", "weight": 30 },
+            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+        ],
+        "key": "swallow_symptoms"
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+  
