@@ -11,7 +11,7 @@ body {
 .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 20px;
 }
 
 h1 {
@@ -33,10 +33,13 @@ h2 {
   line-height: 1.7;
 }
 
-.triage-list li {
-  padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
+.triage-list li:nth-child(odd) {
+  background-color: #5468744f;
 }
+.triage-list li:nth-child(even) {
+  background-color: #202d351e;
+}
+
 
 .alert {
   background-color: #470c0c70;

@@ -717,8 +717,14 @@ async function submitSymptoms() {
       }
       
       // Set result content
-      let message = `預測結果：<span style="color:#c62828;">🟥 ${data.meaning}</span><br>`;
+      let message = `預測結果：<span style="color:#c62828;">${data.meaning}</span><br>`;
       message += `Emergency 信心值: ${data.confidence}`;
+      if (data.prediction === 0) {
+        message += `<br><strong>🏥 請前往急症室就診<br>Please Visit the Emergency Room</strong>`;
+      } else {
+        message += `<br><strong>🏥 建議前往普通科門診或私家診所<br>Please Visit a general clinic or private doctor</strong>`;
+      }
+      
       if (data.override_reason) {
         message += `<br><small style="color:#888;">${data.override_reason}</small>`;
       }
