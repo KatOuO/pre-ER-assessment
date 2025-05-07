@@ -378,6 +378,9 @@ fetch("/static/cc_mapping.json")
 const categoryGrid = document.getElementById("categoryGrid");
 const selectedSymptoms = document.getElementById("selectedSymptoms");
 const searchInput = document.getElementById("searchInput");
+const popupOverlay = document.getElementById("symptomPopupOverlay");
+const popupList = document.getElementById("popupSymptomList");
+const closeBtn = document.getElementById("closeSymptomPopup");
 
 let selected = [];
 let lastCategoryClicked = null;
@@ -420,24 +423,19 @@ window.addEventListener("click", function (e) {
 });
 
 
-function renderSymptoms(symptoms, id) {
-  const overlay = document.getElementById("symptomPopupOverlay");
-  const list = document.getElementById("popupSymptomList");
-  list.innerHTML = "";
-
-  symptoms.forEach(symptom => {
+// Unified renderSymptoms function
+function renderSymptoms(symptomArray) {
+  popupList.innerHTML = ""; // Clear existing
+  symptomArray.forEach((text) => {
     const div = document.createElement("div");
     div.className = "symptom-item";
-    div.textContent = symptom;
-    div.onclick = () => {
-      toggleSymptom(symptom);
-      overlay.style.display = "none";
-    };
-    list.appendChild(div);
+    div.textContent = text;
+    div.onclick = () => toggleSymptom(text);
+    popupList.appendChild(div);
   });
-
-  overlay.style.display = "flex";
+  popupOverlay.style.display = "flex";
 }
+
 
 document.getElementById("closeSymptomPopup").onclick = () => {
   document.getElementById("symptomPopupOverlay").style.display = "none";
@@ -613,37 +611,36 @@ function updateSelected() {
   });
 }
 
+// Search behavior
 searchInput.addEventListener("input", () => {
   const keyword = searchInput.value.toLowerCase().trim();
   if (!keyword) {
     lastCategoryClicked = null;
+    popupOverlay.style.display = "none";
     return;
   }
 
   const allSymptoms = categories.flatMap(c =>
-    c.symptoms.map(s => ({ text: s, categoryId: c.id }))
+    c.symptoms.map(s => s.toLowerCase())
   );
 
-  const matched = allSymptoms.filter(s => s.text.toLowerCase().includes(keyword));
-
+  const matched = allSymptoms.filter(s => s.includes(keyword));
   lastCategoryClicked = null;
 
-  matched.forEach(({ text }) => {
-    const div = document.createElement("div");
-    div.className = "symptom-item";
-    div.textContent = text;
-    div.onclick = () => toggleSymptom(text);
-  });
+  renderSymptoms(matched);
 });
 
+// Clear search button
 document.getElementById("clearSearchBtn").onclick = () => {
   document.getElementById("searchInput").value = "";
-  renderCategories(); 
+  renderCategories(); // fallback to main UI
+  popupOverlay.style.display = "none";
 };
 
 window.addEventListener("click", function (e) {
-  const modal = document.getElementById("resultModal");
-  const content = document.querySelector("#resultModal .modal-content");
+  const modal = document.getElementById("symptomPopupOverlay");
+  const content = document.querySelector("#symptomPopup");
+
   if (e.target === modal) {
     modal.style.display = "none";
   }

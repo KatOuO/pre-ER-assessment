@@ -272,87 +272,19 @@
         ],
         "key": "dehydration_signs"
         },
-
-        "cc_swallowedforeignbody": {
-        "question": "吞入異物後是否感到不適？\nDo you feel discomfort after swallowing the object?",
+        "cc_constipation": {
+        "question": "關於便秘的情況，請回答以下問題：\nFor your constipation, please answer the following:",
         "type": "checkboxes",
         "options": [
-            { "text": "胸口或喉嚨不適 Chest/throat discomfort", "weight": 20 },
-            { "text": "呼吸困難 Shortness of breath", "weight": 30 },
-            { "text": "吞嚥困難 Difficulty swallowing", "weight": 30 },
-            { "text": "無以上情況 / None", "weight": 0, "exclusive": true }
+            { "text": "症狀已持續超過3天 Symptoms lasting more than 3 days", "weight": 20 },
+            { "text": "有腹痛 Abdominal pain", "weight": 25 },
+            { "text": "腹痛程度高（疼痛分數超過6分）Pain score > 6/10", "weight": 25 },
+            { "text": "伴有腹脹 Abdominal distention", "weight": 20 },
+            { "text": "完全無排氣 No farting at all", "weight": 30 },
+            { "text": "無以上情況 / None of the above", "weight": 0, "exclusive": true }
         ],
-        "key": "swallow_symptoms"
+        "key": "constipation_followup"
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-      
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
